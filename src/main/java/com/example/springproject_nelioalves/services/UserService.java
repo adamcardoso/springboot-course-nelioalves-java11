@@ -2,6 +2,7 @@ package com.example.springproject_nelioalves.services;
 
 import com.example.springproject_nelioalves.entities.User;
 import com.example.springproject_nelioalves.repositories.UserRepository;
+import com.example.springproject_nelioalves.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class UserService {
 
     public User findById(Long id){
         Optional<User> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     //insere no BD um novo usuario
@@ -32,7 +33,7 @@ public class UserService {
     }
 
     public User update (Long id, User obj){
-        User entity = repository.getOne(id);
+        User entity = repository.getById(id);
         updateData(entity, obj);
 
         return repository.save(entity);
